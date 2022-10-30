@@ -8,7 +8,10 @@ def readData(filename):
     with open(filename, 'r') as trainData:
         for line in trainData:
             acousticData, timeToImpact = line.strip().split(',')
-            X.append(acousticData)
-            y.append(timeToImpact)
+            X.append(float(acousticData))
+            y.append(float(timeToImpact))
 
-        return np.array(X), np.array(y)
+        X = np.array(X)
+        y = np.array(y)
+
+        return X.reshape(-1, 1), y
