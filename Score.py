@@ -1,3 +1,4 @@
+import sys
 import joblib
 
 
@@ -24,9 +25,18 @@ def scoreAll(test_X, test_y):
 
 
 if __name__ == '__main__':
-
-    test_X, test_y = readTestData('windows/testsplit0.pkl')
-    print(scoreModel(test_X, test_y, 0))
+    if len(sys.argv) == 3:
+        testSet, modelNum = sys.argv[1:]
+        test_X, test_y = readTestData(f'windows/testsplit{testSet}.pkl')
+        print(scoreModel(test_X, test_y, modelNum))
+    elif len(sys.argv) == 2:
+        modelNum = sys.argv[1]
+        test_X, test_y = readTestData(f'windows/testsplit8.pkl')
+        print(scoreModel(test_X, test_y, modelNum))
+    else:
+        test_X, test_y = readTestData(f'windows/testsplit.pkl')
+        for modelNum in range(8):
+            print(scoreModel(test_X, test_y, modelNum))
 
     # if len(sys.argv) == 2:
     #     if sys.argv[1].lower() == 'retrain':
