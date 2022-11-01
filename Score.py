@@ -38,7 +38,8 @@ if __name__ == '__main__':
         scores = []
         for modelNum in range(8):
             score = scoreModel(test_X, test_y, modelNum)
-            print(score)
             scores.append(score)
+        print('Scores on test set 8:')
+        print(scores)
         print('Average Score')
         print(sum(scores)/len(scores))
