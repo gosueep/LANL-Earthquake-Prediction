@@ -4,7 +4,7 @@ import joblib
 
 def readTestData(filename):
     test_X, test_y = joblib.load(filename)
-    print('Test Data 8 read in')
+    print('Test Data read in')
     return test_X, test_y
     # print(clf.score(test_X, test_y))
 
@@ -26,7 +26,7 @@ def scoreAll(test_X, test_y):
 
 if __name__ == '__main__':
     if len(sys.argv) == 3:
-        testSet, modelNum = sys.argv[1:]
+        modelNum, testSet = sys.argv[1:]
         test_X, test_y = readTestData(f'windows/testsplit{testSet}.pkl')
         print(scoreModel(test_X, test_y, modelNum))
     elif len(sys.argv) == 2:
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         test_X, test_y = readTestData(f'windows/testsplit8.pkl')
         print(scoreModel(test_X, test_y, modelNum))
     else:
-        test_X, test_y = readTestData(f'windows/testsplit.pkl')
+        test_X, test_y = readTestData(f'windows/testsplit8.pkl')
         scores = []
         for modelNum in range(8):
             score = scoreModel(test_X, test_y, modelNum)
