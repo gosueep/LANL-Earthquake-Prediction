@@ -35,13 +35,10 @@ if __name__ == '__main__':
         print(scoreModel(test_X, test_y, modelNum))
     else:
         test_X, test_y = readTestData(f'windows/testsplit.pkl')
+        scores = []
         for modelNum in range(8):
-            print(scoreModel(test_X, test_y, modelNum))
-
-    # if len(sys.argv) == 2:
-    #     if sys.argv[1].lower() == 'retrain':
-    #         createAll(True)
-    #     else:
-    #         createAll(bool(sys.argv[1]))
-    # elif len(sys.argv) == 1:
-    #     createAll()
+            score = scoreModel(test_X, test_y, modelNum)
+            print(score)
+            scores.append(score)
+        print('Average Score')
+        print(sum(scores)/len(scores))
