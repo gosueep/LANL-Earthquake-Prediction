@@ -14,7 +14,7 @@ def calcStats(window):
     return stats
 
 
-def getWindows(X, y, WINDOW_SIZE=100, STEP_SIZE=1):
+def getWindows(X, y, WINDOW_SIZE=100, STEP_SIZE=1, filename='test.out'):
     windows = []
     y_values = []
 
@@ -30,6 +30,7 @@ def getWindows(X, y, WINDOW_SIZE=100, STEP_SIZE=1):
             print(f'Iteration: {start}')
 
     windows = np.array(windows)
+    joblib.dump((windows, y_values), filename)
     return windows, y_values
 
 
@@ -38,11 +39,10 @@ def makeWindows(WINDOW_SIZE, STEP_SIZE, recreate=True):
     for i in range(0, 10):
         if recreate or not os.path.isfile(f'windows/testsplit{i}.pkl'):
             X, y = readData(f'data/testsplit{i}.csv')
-            windows, y_values = getWindows(X, y, WINDOW_SIZE, STEP_SIZE)
-            joblib.dump((windows, y_values), f'windows/testsplit{i}.pkl')
+            # windows, y_values = getWindows(X, y, WINDOW_SIZE, STEP_SIZE)
+            # joblib.dump((windows, y_values), f'windows/testsplit{i}.pkl')
 
-            # parallelize downloads - SO MUCH FASTER
-            proc = Process(target=getWindows, args=(X, y, WINDOW_SIZE, STEP_SIZE))
+            proc = Process(target=getWindows, args=(X, y, WINDOW_SIZE, STEP_SIZE, f'windows/testsplit{i}.pkl'))
             procs.append(proc)
             proc.start()
             proc.join()
