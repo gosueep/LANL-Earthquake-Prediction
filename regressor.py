@@ -47,3 +47,4 @@ print(mean_absolute_error(model.predict(test_X), test_y))
 # LGBM -29.580216670260004
 
 # LGBM: improved = 1.98 MAE
+# original: best was 2.7 MAE
