@@ -7,7 +7,12 @@ def readData(filename):
     y = []
     with open(filename, 'r') as trainData:
         for line in trainData:
-            acousticData, timeToImpact = line.strip().split(',')
+            line = line.strip().split(',')
+            if len(line) != 2:
+                continue
+            acousticData, timeToImpact = line
+            if acousticData == 'acoustic_data':     # if col header
+                continue
             X.append(float(acousticData))
             y.append(float(timeToImpact))
 

@@ -2,16 +2,22 @@ import os
 from multiprocessing import Process
 
 import numpy as np
+from scipy import stats
 from common import readData
 import joblib
 
 
 def calcStats(window):
-    stats = np.array([np.max(window), np.min(window),
-                      np.mean(window),
-                      np.std(window)
-                      ])
-    return stats
+    winMin = np.min(window)
+    winMax = np.max(window)
+    calculatedStats = np.array([winMax, winMin,
+                                np.mean(window),
+                                np.std(window),
+                                winMax - winMin
+                                # mode(window),
+                                # np.median(window)
+                                ])
+    return calculatedStats
 
 
 def getWindows(X, y, WINDOW_SIZE=100, STEP_SIZE=1, filename='test.out'):
@@ -38,6 +44,7 @@ def makeWindows(WINDOW_SIZE, STEP_SIZE, recreate=True):
     procs = []
     for i in range(0, 10):
         if recreate or not os.path.isfile(f'windows/testsplit{i}.pkl'):
+            print(f'Making Window {i}')
             X, y = readData(f'data/testsplit{i}.csv')
             # windows, y_values = getWindows(X, y, WINDOW_SIZE, STEP_SIZE)
             # joblib.dump((windows, y_values), f'windows/testsplit{i}.pkl')
@@ -49,10 +56,15 @@ def makeWindows(WINDOW_SIZE, STEP_SIZE, recreate=True):
 
 
 if __name__ == '__main__':
-    WINDOW_SIZE = 10000
-    STEP_SIZE = 100
+    WINDOW_SIZE = 150000
+    STEP_SIZE   = 1000
 
-    makeWindows(WINDOW_SIZE, STEP_SIZE)
+    X, y = readData(f'data/train.csv')
+    stopPoint = int(len(X) * 0.8)
+    getWindows(X[:stopPoint], y[:stopPoint], WINDOW_SIZE, STEP_SIZE, 'train.csv')
+    getWindows(X[stopPoint:], y[stopPoint:], WINDOW_SIZE, STEP_SIZE, 'test.csv')
+
+    # makeWindows(WINDOW_SIZE, STEP_SIZE, recreate=False)
 
     # X, y = readData('./data/testsplit0.csv')
     # print('READ IN DATA')
@@ -64,3 +76,10 @@ if __name__ == '__main__':
 
 # ~ 3-4 mins for 500 step size
 
+# W: 100000, SS: 10000 - .33
+# W: 100000
+# W: 1000000, 100000 - .498
+# W: 1000000, 1000000
+
+
+# all as one - 1000000, 10000
