@@ -28,23 +28,32 @@ test_X, test_y = df.drop('time_to_failure', axis=1)[split:], df['time_to_failure
 print('loaded in')
 
 
-model = LGBMRegressor(n_estimators=22, max_depth=4).fit(train_X, train_y)
+model = LGBMRegressor(n_estimators=27, max_depth=4).fit(train_X, train_y)
 
-model = LGBMRegressor()
-params = { 'n_estimators': range(1, 30), 'max_depth': range(3, 10) }
-# n_est = 22, max_depth = 4
-model = GridSearchCV(model, params, scoring='neg_mean_absolute_error', return_train_score=True) 
-model.fit(train_X, train_y)
-print(model.best_params_)
+# model = LGBMRegressor()
+# params = { 'n_estimators': range(1, 30), 'max_depth': range(3, 10) }
+# # n_est = 27, max_depth = 4
+# model = GridSearchCV(model, params, scoring='neg_mean_absolute_error', return_train_score=True) 
+# model.fit(train_X, train_y)
+# print(model.best_params_)
 
-
-# for i, x in enumerate(model.predict(test_X)):
-#     print(x, test_y.iloc[i])
+sums = []
+for i, x in enumerate(model.predict(test_X)):
+    print(x, test_y.iloc[i])
+    sums.append(abs(x - test_y.iloc[i]))
+print(np.mean(sums))
 print(model.score(test_X, test_y))
 print(mean_absolute_error(model.predict(test_X), test_y))
+
+pred = model.predict(test_X)
+output = pd.DataFrame(columns=['predicted', 'actual'])
+output['predicted'] = pred
+output['actual'] = test_y.tolist()
+output.to_csv('pred.csv', index=False)
+
 
 # SVR: -60.5644328880081
 # LGBM -29.580216670260004
 
-# LGBM: improved = 1.98 MAE
+# LGBM: improved = 1.95 MAE
 # original: best was 2.7 MAE
