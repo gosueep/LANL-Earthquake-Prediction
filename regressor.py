@@ -37,19 +37,20 @@ model = LGBMRegressor(n_estimators=27, max_depth=4).fit(train_X, train_y)
 # model.fit(train_X, train_y)
 # print(model.best_params_)
 
-sums = []
-for i, x in enumerate(model.predict(test_X)):
-    print(x, test_y.iloc[i])
-    sums.append(abs(x - test_y.iloc[i]))
-print(np.mean(sums))
+# sums = []
+# for i, x in enumerate(model.predict(test_X)):
+#     print(x, test_y.iloc[i])
+#     sums.append(abs(x - test_y.iloc[i]))
+# print(np.mean(sums))
 print(model.score(test_X, test_y))
 print(mean_absolute_error(model.predict(test_X), test_y))
 
-pred = model.predict(test_X)
+print(mean_absolute_error(model.predict(df.drop('time_to_failure', axis=1)), df['time_to_failure']))
+pred = model.predict(df.drop('time_to_failure', axis=1))
 output = pd.DataFrame(columns=['predicted', 'actual'])
 output['predicted'] = pred
-output['actual'] = test_y.tolist()
-output.to_csv('pred.csv', index=False)
+output['actual'] = df['time_to_failure'].tolist()
+output.to_csv('pred_all.csv', index=False)
 
 
 # SVR: -60.5644328880081
